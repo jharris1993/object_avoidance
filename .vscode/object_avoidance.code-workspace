@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"name": "object_avoidance",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"python.linting.enabled": false,
+		"files.autoSave": "afterDelay"
+	}
+}
