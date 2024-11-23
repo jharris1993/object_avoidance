@@ -3,12 +3,17 @@
 import easygopigo3 as easy
 import time
 import random
+import os
+import sys
+
 
 gpg = easy.EasyGoPiGo3()
 my_distance_portI2C = gpg.init_distance_sensor('I2C')
 time.sleep(0.1)
 
-
+print("sys.path", sys.path)
+print("pythonpath", PYTHONPATH)
+exit()
 # start
 while True:
     while my_distance_portI2C.read_inches() > 12:

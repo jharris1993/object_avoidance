@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# 
 # Object Avoidance Robot
 
 import easygopigo3 as easy
@@ -12,6 +14,13 @@ sleep_time = 0.50  # pause time in seconds
 
 my_distance_portI2C = gpg.init_distance_sensor('I2C')
 time.sleep(0.1)
+
+# for triggering the shutdown procedure when a signal is detected
+keyboard_trigger = Event()
+def signal_handler(signal, frame):
+    print("Signal detected. Stopping threads.")
+    gpg.stop()
+    keyboard_trigger.set()
 
 print("Running: Test Servos.\n")
 
@@ -121,7 +130,19 @@ def avoid():
 #------------------------------------
 
 if __name__ == "__main__":
-    test_servos()  # make sure servos are centered
-    avoid()
-    logging.info("Finished!")
-    sys.exit(0)
+    # registering both types of termination signals
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+test_servos()  # make sure servos are centered
+avoid()
+logging.info("Finished!")
+sys.exit(0)
+while not keyboard_trigger.is_set():
+    sleep(0.25)
+
+# until some keyboard event is detected
+print("\n ==========================\n\n")
+print("A \"shutdown\" command event was received!\n")
+gpg.stop()
+exit()
